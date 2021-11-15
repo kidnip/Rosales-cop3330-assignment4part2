@@ -27,7 +27,7 @@
 2. To save a single list, click "**Save**" then "**Save List**" from the menu bar at the top. Follow prompt.
 3. To save every list, click "**Save**" then "**Save All**" from the menu bar at the top. Follow prompt.
    - Only folder directory/locations can be entered. It will save as a text file called "todolist.txt".
-   - Please do not alter any text (for loading purposes).
+   - Please do not alter any text, excluding file name (for loading purposes).
 
 **Loading List(s):**
 1. To load list(s), click "**Load**" then "**Load List(s)**" from the menu bar at the top. Follow prompt.
