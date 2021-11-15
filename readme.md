@@ -2,7 +2,7 @@
 
 **Creating a List:**
 1. To add a list, first select the button that reads "**Add New List**".
-2. Enter in only a date and click **Submit** to complete.
+2. Enter in only a name and click **Submit** to complete.
 
 **Adding an Event:**
 1. To add an event, first select the button that reads "**Add New Event**".
