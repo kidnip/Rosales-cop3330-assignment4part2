@@ -1,0 +1,92 @@
+@startuml
+
+node "To-Do List Maker"{
+
+    circle fxml_file
+
+    class ToDoList{
+        ..Stage..
+        Stage window
+        ..Scenes..
+        Scene scene1
+        Scene scene2
+        --Methods--
+        +{static} void main()
+        +void start()
+    }
+
+    class ToDoController{
+        --Adding Elements--
+        +void onRadioButtonClick()
+        +void onClickSubmit()
+        --List Options--
+        +ArrayList<ListEntry> editTitle()
+        +ArrayList<ListEntry> deleteList()
+        +void onRightClickList()
+        ..View Options..
+        +void showAllItems()
+        +void showComplete()
+        +void showIncomplete()
+        +void viewListOptions()
+        --Event Options--
+        +ListEntry deleteEvent()
+        +EventEntry editDescription()
+        +EventEntry editDate()
+        +EventEntry markComplete()
+        +void onRightClickItem()
+        --Save Options--
+        +void createFile()
+        +void saveAList()
+        +void saveAll()
+        --Load Options--
+        +ArrayList<ListEntry> createLists()
+        +void loadLists()
+    }
+
+    class ListEntry{
+        ..Private Data..
+        -String listName
+        -ArrayList<EventEntry> EventArray
+        --Methods--
+        +ListEntry()
+        +String getListName()
+        +void setListName()
+        +ArrayList<EventEntry> getEventArray()
+    }
+
+    class EventEntry{
+        ..Private Data..
+        -String description
+        -String year
+        -String month
+        -String day
+        -int complete
+        --Methods--
+        ..Getters..
+        String getDescription()
+        String getYear()
+        String getMonth()
+        String getDay()
+        int getComplete()
+        String getDate()
+        ..Setters..
+        void setDescription()
+        void setYear()
+        void setMonth()
+        void setDay()
+        void setComplete()
+    }
+
+    fxml_file -l-> ToDoList : Creates a Stage using\nthe ToDoList.fxml file
+    ToDoController -r-> ListEntry : Initializes an ArrayList of \nListEntry to store data
+    ListEntry -r-> ToDoController : Passes data to ToDoController \nwhenever needed
+    EventEntry -u-> ListEntry : Array of events is\nstored within \nListEntry class
+    ToDoController -d-> fxml_file : Controls the \ninnerworkings and\n data within the \napplication
+    ToDoController <-u- fxml_file : Works with the\n Controls in the file\n to function
+    ToDoController -d-> EventEntry : Can edit EventEntrys\nwhen certain methods\n are called
+    EventEntry -u-> ToDoController : Passes data to \nToDoController whenever needed
+
+
+
+}
+@enduml
