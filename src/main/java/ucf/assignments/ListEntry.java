@@ -6,6 +6,10 @@ import javafx.collections.ObservableList;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/*
+ *  UCF COP3330 Fall 2021 Assignment 4 Solution
+ *  Copyright 2021 Jeremy Rosales
+ */
 public class ListEntry {
     private String listName;
     private ObservableList<EventEntry> EventArray = FXCollections.observableArrayList();

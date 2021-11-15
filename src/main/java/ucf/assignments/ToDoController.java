@@ -26,6 +26,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+/*
+ *  UCF COP3330 Fall 2021 Assignment 4 Solution
+ *  Copyright 2021 Jeremy Rosales
+ */
 public class ToDoController extends Component implements Initializable{
 
     @FXML
@@ -190,6 +194,9 @@ public class ToDoController extends Component implements Initializable{
                 break;
             }
         }
+        if(indexL == userLists.size())
+            return;
+
         bottomLabel.setText("Showing all items for \"" +userLists.get(indexL).getListName() +"\"");
     }
 
@@ -467,7 +474,7 @@ public class ToDoController extends Component implements Initializable{
         // call createFile(), passing list name and file
         // path
         if(userLists.size() == 0){
-            bottomLabel.setText("There are no lists to save");
+            bottomLabel.setText("There are no lists to save. Please create one to save");
             System.out.println("no lists");
             return;
         }
@@ -519,7 +526,7 @@ public class ToDoController extends Component implements Initializable{
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(input +"\\todolist.txt"));
                 indexL = listView.getSelectionModel().getSelectedIndex();
-                writer.write("List " + (indexL + 1) +" :\n");
+                writer.write("List " + (indexL + 1) +":\n");
                 writer.write(userLists.get(indexL).getListName() +"\n");
                 if(userLists.get(indexL).getEventArray() != null && userLists.get(indexL).getEventArray().size() > 0) {
                     for (indexE = 0; indexE < userLists.get(indexL).getEventArray().size(); indexE++) {
@@ -527,7 +534,7 @@ public class ToDoController extends Component implements Initializable{
                                 +userLists.get(indexL).getEventArray().get(indexE).getDate() +" -- "
                                 +userLists.get(indexL).getEventArray().get(indexE).getStatus() +"\n");
                     }
-                    writer.write("\n");
+                    writer.write("-end-");
                 }
                 writer.close();
                 bottomLabel.setText("File for \"" +userLists.get(indexL).getListName() +"\" created in " +input);
@@ -549,7 +556,7 @@ public class ToDoController extends Component implements Initializable{
         // call createFile(), passing just file path
         // and listName as "ALL"
         if(userLists.size() == 0){
-            bottomLabel.setText("There are no lists to save");
+            bottomLabel.setText("There are no lists to save. Please create one to save");
             System.out.println("no lists");
             return;
         }
@@ -594,7 +601,7 @@ public class ToDoController extends Component implements Initializable{
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(input +"\\todolist.txt"));
                 for(indexL = 0; indexL < userLists.size(); indexL++) {
-                    writer.write("List " + (indexL + 1) + " :\n");
+                    writer.write("List " + (indexL + 1) + ":\n");
                     writer.write(userLists.get(indexL).getListName() + "\n");
                     if (userLists.get(indexL).getEventArray() != null && userLists.get(indexL).getEventArray().size() > 0) {
                         for (indexE = 0; indexE < userLists.get(indexL).getEventArray().size(); indexE++) {
@@ -603,7 +610,7 @@ public class ToDoController extends Component implements Initializable{
                                     + userLists.get(indexL).getEventArray().get(indexE).getStatus() + "\n");
                         }
                     }
-                    writer.write("\n");
+                    writer.write("-end-");
                 }
                 writer.close();
                 bottomLabel.setText("All files stored in " +input);
@@ -671,20 +678,73 @@ public class ToDoController extends Component implements Initializable{
                     alert.showAndWait();
                 }
                 Scanner reader = new Scanner(file);
+                String word = reader.next();
                 while(reader.hasNextLine()){
-                    String word = reader.next();
-                    System.out.println(word);
+                    if(word.equals("-end-")){
+                        return;
+                    }
+                    if(word.equals("List")){
+                        reader.nextLine();
+                        word = reader.nextLine();
+                    }
+                    else {  //list name found
+                        ListEntry list = new ListEntry();
+                        list.setListName(word);
+                        userLists.add(list);
+                        listView.getItems().add(list.getListName());
+                        word = reader.next();  //reading for description
+                        while(!word.equals("List") && !word.equals("-end-")){
+                            EventEntry event = new EventEntry();
+                            StringBuilder descHold = new StringBuilder();
+                            descHold.append(word);
+                            word = reader.next();
+                            while(!word.equals("--")) {
+                                descHold.append(" ");
+                                descHold.append(word);
+                                word = reader.next();
+                            }
+                            String dateHold = reader.next();  //read date
+                            reader.next();  //read --
+                            String statusHold = reader.next(); //read status
+                            if(statusHold.equals("In")){
+                                statusHold = statusHold +" " +reader.next();  //read "In Progress"
+                            }
+                            event.setDescription(descHold.toString());  //
+                            event.setDate(dateHold);                    //event created
+                            event.setStatus(statusHold);                //
+                            list.addEvent(event);
+                            word = reader.next();
+                        }
+                        System.out.println(userLists.get(0).getListName());
+                        System.out.println(userLists.get(0).getEventArray().get(0).getDescription());
+                        System.out.println(userLists.get(0).getEventArray().get(0).getDate());
+                        System.out.println(userLists.get(0).getEventArray().get(0).getStatus());
+                    }
                 }
+                tableView.setItems(userLists.get(0).getEventArray());
+                eventDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
+                eventDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+                eventStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
+                bottomLabel.setText("Lists loaded from file");
+                System.out.println("loaded files");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Directory/location was not accessible");
                 alert.showAndWait();
+                System.out.println("folder not found");
             }
-
         });
+    }
+
+    public void help(){
+        Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setTitle("User Guide");
+        info.setHeaderText("Please refer to the \"readme.md\" file for help");
+        info.showAndWait();
+        bottomLabel.setText("Look down here for instructions, too!");
     }
 
     /*

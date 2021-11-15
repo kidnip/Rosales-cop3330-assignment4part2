@@ -22,11 +22,14 @@
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Load">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#loadLists" text="Load Items" />
-                        <MenuItem mnemonicParsing="false" onAction="#loadLists" text="Load Lists" />
-                  </items>
-                </Menu>
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#loadLists" text="Load List(s)" />
+                     </items></Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#help" text="User Guide" />
+                    </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <HBox>
